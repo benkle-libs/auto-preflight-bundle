@@ -1,4 +1,21 @@
 services:
-#    benkle_auto_preflight.example:
-#        class: Benkle\AutoPreflightBundle\Example
-#        arguments: ["@service_id", "plain_value", %parameter%]
+    benkle.autopreflight.requestlistener:
+        class: Benkle\AutoPreflightBundle\Listener\RequestListener
+        tags:
+            - name: kernel.event_listener
+              event: kernel.request
+              priority: 9999
+
+    benkle.autopreflight.responselistener:
+        class: Benkle\AutoPreflightBundle\Listener\ResponseListener
+        arguments:
+            - @benkle.autopreflight.rms
+        tags:
+            - name: kernel.event_listener
+              event: kernel.response
+              priority: 9999
+
+    benkle.autopreflight.rms:
+        class: Benkle\AutoPreflightBundle\Service\RouteMethodService
+        arguments:
+            - @router
